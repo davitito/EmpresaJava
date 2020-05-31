@@ -1,10 +1,6 @@
 package controle;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,7 +18,6 @@ import entidade.Funcionario;
 
 import entidade.Usuario;
 
-import util.JdbcUtil;
 import dao.TelefoneDAO;
 import dao.TelefoneDAOImpl;
 import entidade.Telefone;
@@ -39,6 +34,7 @@ public class FuncionarioBean {
 	private Long txtCpf;
 	private String txtNome;	
 	private String txtEmail;
+	private String txtSenha;	
 	
 	private Long txtTelDDD;
 	private Long txtTelNum;
@@ -49,8 +45,6 @@ public class FuncionarioBean {
 	private String txtEndCidade;
 	private String txtEndEstado;
 	private String txtEndCEP;
-	
-	private String txtSenha;	
 	
 	private Boolean emailValido;
 	
@@ -104,74 +98,11 @@ public class FuncionarioBean {
 		return emailValido;
 	}
 	
-	public Long recuperaIdTel() {
-		String sql = "SELECT S_TELEFONE.NEXTVAL FROM DUAL";
-		Long idRetorno = null;
-		Connection conexao;
-		try {
-			conexao = JdbcUtil.getConexao();
-			PreparedStatement ps = conexao.prepareStatement(sql);
-			ResultSet res = ps.executeQuery();
-			while (res.next()) {
-				idRetorno = res.getLong(1);
-			 }
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return idRetorno;
-	}
-	
-	public Long recuperaIdEnd() {
-		String sql = "SELECT S_ENDERECO.NEXTVAL FROM DUAL";
-		Long idRetorno = null;
-		Connection conexao;
-		try {
-			conexao = JdbcUtil.getConexao();
-			PreparedStatement ps = conexao.prepareStatement(sql);
-			ResultSet res = ps.executeQuery();
-			while (res.next()) {
-				idRetorno = res.getLong(1);
-			 }
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return idRetorno;
-	}
-
 	public void criarFuncionario() throws IOException {
 
 		emailValido = validarEmail(this.txtEmail);
 		
 		if (emailValido) {
-			
-			Telefone novoTel = new Telefone();
-
-			Long idTel = recuperaIdTel();
-			novoTel.setId(idTel);
-			novoTel.setDdd(this.txtTelDDD);
-			novoTel.setNumero_tel(this.txtTelNum);
-			
-			if (this.telefone.getId() == null) {
-				this.telefoneDAO.inserir(novoTel);
-			}
-			
-			Endereco novoEnd = new Endereco();
-
-			Long idEnd = recuperaIdEnd();
-			novoEnd.setId(idEnd);
-			novoEnd.setRua(this.txtEndRua);
-			novoEnd.setNumero_end(this.txtEndNum);
-			novoEnd.setBairro(this.txtEndBairro);
-			novoEnd.setCidade(this.txtEndCidade);
-			novoEnd.setEstado(this.txtEndEstado);
-			novoEnd.setCep(this.txtEndCEP);
-			
-			
-			if (this.endereco.getId() == null) {
-				this.enderecoDAO.inserir(novoEnd);
-			}
 			
 			Funcionario novo = new Funcionario();
 			
@@ -181,10 +112,6 @@ public class FuncionarioBean {
 			novo.setCpf(this.txtCpf);
 			novo.setNome(this.txtNome);
 			novo.setEmail(this.txtEmail);
-			novo.setTelefone_id(idTel);
-			//novo.setEndereco_id(this.funcionario.getEndereco_id());
-			novo.setEndereco_id(idEnd);
-			//novo.setEndereco_id(this.endereco.getId());
 			novo.setSenha(this.txtSenha);
 				
 			
@@ -195,27 +122,14 @@ public class FuncionarioBean {
 					achou = true;
 				}
 			}
-			System.out.println("nova entidade "+novo);
-			
-			System.out.println("novo cpf "+novo.getCpf());
-			System.out.println("novo email"+novo.getEmail());
-			System.out.println("novo nome "+novo.getNome());
-			System.out.println("novo tel id "+novo.getTelefone_id());
-			System.out.println("novo end id "+novo.getEndereco_id());
-			System.out.println("novo senha "+novo.getSenha());
-			
-			System.out.println("this cpf "+this.txtCpf);
-			System.out.println("this email "+this.txtEmail);
-			System.out.println("this nome "+this.txtNome);
-			System.out.println("this tel id "+idTel);
-			System.out.println("this end id "+idEnd);
-			System.out.println("this senha "+this.txtSenha);
-			
+
 			if(achou) {
 				FacesContext.getCurrentInstance()
 					.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário já cadastrado, tente outro!!!"));
 			}else {
 				this.funcionarioDAO.inserir(novo);
+				cadastrarTelefone();
+				cadastrarEndereco();
 				this.funcionario = new Funcionario();
 				
 			}
@@ -225,7 +139,34 @@ public class FuncionarioBean {
 		}
 		
 	}
+	public void cadastrarTelefone() {
+		Telefone novoTel = new Telefone();
 
+		novoTel.setDdd(this.txtTelDDD);
+		novoTel.setNumero_tel(this.txtTelNum);
+		novoTel.setCpf_tel(this.txtCpf);
+		
+		if (this.telefone.getId() == null) {
+			this.telefoneDAO.inserir(novoTel);
+			this.telefone = new Telefone();
+		}
+	}
+	public void cadastrarEndereco() {
+		Endereco novoEnd = new Endereco();
+
+		novoEnd.setRua(this.txtEndRua);
+		novoEnd.setNumero_end(this.txtEndNum);
+		novoEnd.setBairro(this.txtEndBairro);
+		novoEnd.setCidade(this.txtEndCidade);
+		novoEnd.setEstado(this.txtEndEstado);
+		novoEnd.setCep(this.txtEndCEP);
+		novoEnd.setCpf_end(this.txtCpf);
+		
+		if (this.endereco.getId() == null) {
+			this.enderecoDAO.inserir(novoEnd);
+			this.endereco = new Endereco();
+		}
+	}
 	public Long getTxtCpf() {
 		return txtCpf;
 	}

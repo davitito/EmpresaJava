@@ -24,12 +24,6 @@ public class Funcionario {
 	@Column(name="NOME", nullable = false)
 	private String nome;
 	
-	@Column(name="TELEFONE_ID", nullable = false)
-	private Long telefone_id;
-	
-	@Column(name="ENDERECO_ID", nullable = false)
-	private Long endereco_id;
-	
 	@Column(name="SENHA", nullable = false)
 	private String senha;
 	
@@ -63,22 +57,6 @@ public class Funcionario {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public Long getTelefone_id() {
-		return telefone_id;
-	}
-
-	public void setTelefone_id(Long telefone_id) {
-		this.telefone_id = telefone_id;
-	}
-
-	public Long getEndereco_id() {
-		return endereco_id;
-	}
-
-	public void setEndereco_id(Long endereco_id) {
-		this.endereco_id = endereco_id;
 	}
 
 	public String getSenha() {

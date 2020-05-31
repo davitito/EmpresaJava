@@ -2,11 +2,8 @@ package entidade;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -15,8 +12,6 @@ public class Telefone {
 
 	@Id
 	@Column(name="ID", nullable = false)
-	@GeneratedValue(generator = "S_TELEFONE")
-	@SequenceGenerator(name = "S_TELEFONE", sequenceName = "S_TELEFONE", allocationSize = 1)
 	private Long id;
 	
 	@Column(name="DDD", nullable = false)
@@ -26,8 +21,8 @@ public class Telefone {
 	private Long numero_tel;
 	
 	@ManyToOne
-	@JoinColumn (name="ID", referencedColumnName = "TELEFONE_ID", nullable = false)
-	private Funcionario funcionario;
+	@Column(name="CPF_TEL", nullable = false)
+	private Long cpf_tel;
 	
 	
 	public Long getId() {
@@ -54,12 +49,12 @@ public class Telefone {
 		this.numero_tel = numero_tel;
 	}
 
-	public Funcionario getFuncionario() {
-		return funcionario;
+	public Long getCpf_tel() {
+		return cpf_tel;
 	}
 
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
+	public void setCpf_tel(Long cpf_tel) {
+		this.cpf_tel = cpf_tel;
 	}
 	
 	

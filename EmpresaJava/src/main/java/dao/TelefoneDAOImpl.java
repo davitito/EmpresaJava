@@ -11,11 +11,28 @@ import entidade.Telefone;
 import util.JdbcUtil;
 
 public class TelefoneDAOImpl implements TelefoneDAO {
-
+	
+	public Long recuperaId() {
+		String sql = "SELECT S_TELEFONE.NEXTVAL FROM DUAL";
+		Long idRetorno = null;
+		Connection conexao;
+		try {
+			conexao = JdbcUtil.getConexao();
+			PreparedStatement ps = conexao.prepareStatement(sql);
+			ResultSet res = ps.executeQuery();
+			while (res.next()) {
+				idRetorno = res.getLong(1);
+			 }
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return idRetorno;
+	}
 	
 	public void inserir(Telefone telefone) {
 
-		String sql = "INSERT INTO TELEFONE (ID, DDD, NUMERO_TEL) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO TELEFONE (ID, DDD, NUMERO_TEL, CPF_TEL) VALUES (?, ?, ?, ?)";
 
 		Connection conexao;
 		try {
@@ -23,10 +40,13 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 			
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
-			ps.setLong(1, telefone.getId());
+			Long id = this.recuperaId();
+			
+			ps.setLong(1, id);
 			ps.setLong(2, telefone.getDdd());
 			ps.setLong(3,telefone.getNumero_tel());
-
+			ps.setLong(4, telefone.getCpf_tel());
+			
 			ps.execute();
 			ps.close();
 			
@@ -83,7 +103,7 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 
 	public Telefone pesquisar(Long id) {
 
-		String sql = "SELECT T.DDD, T.NUMERO_TEL FROM TELEFONE T WHERE ID = ?";
+		String sql = "SELECT T.DDD, T.NUMERO_TEL, T.CPF_TEL FROM TELEFONE T WHERE ID = ?";
 		
 		Telefone telefone = null;
 		
@@ -101,7 +121,8 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 				telefone = new Telefone();
 				telefone.setDdd(res.getLong("DDD"));
 				telefone.setNumero_tel(res.getLong("NUMERO_TEL"));
-				telefone.setId(res.getLong("ID"));			
+				telefone.setCpf_tel(res.getLong("CPF_TEL"));
+				telefone.setId(res.getLong("ID"));					
 			 }
 			
 			ps.close();
@@ -133,6 +154,7 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 				telefone.setId(res.getLong("ID"));
 				telefone.setDdd(res.getLong("DDD"));
 				telefone.setNumero_tel(res.getLong("NUMERO_TEL"));
+				telefone.setCpf_tel(res.getLong("CPF_TEL"));
 				
 				listaTelefones.add(telefone);
 			 }

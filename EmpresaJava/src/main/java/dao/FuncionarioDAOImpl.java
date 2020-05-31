@@ -16,15 +16,8 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 
 	public void inserir(Funcionario funcionario) {
 
-		String sql = "INSERT INTO FUNCIONARIO (CPF, EMAIL, NOME, TELEFONE_ID, ENDERECO_ID, SENHA) VALUES (?, ?, ?, ?, ?, ?)";
-		
-		System.out.println("dao func cpf "+funcionario.getCpf());
-		System.out.println("dao func email "+funcionario.getEmail());
-		System.out.println("dao func nome "+funcionario.getNome());
-		System.out.println("dao func tel id "+funcionario.getTelefone_id());
-		System.out.println("dao func end id "+funcionario.getEndereco_id());
-		System.out.println("dao func senha "+funcionario.getSenha());
-		
+		String sql = "INSERT INTO FUNCIONARIO (CPF, EMAIL, NOME, SENHA) VALUES (?, ?, ?, ?)";
+	
 		Connection conexao;
 		try {
 			conexao = JdbcUtil.getConexao();
@@ -34,10 +27,7 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 			ps.setLong(1, funcionario.getCpf());
 			ps.setString(2, funcionario.getEmail());
 			ps.setString(3, funcionario.getNome());
-			ps.setLong(4, funcionario.getTelefone_id());
-			ps.setLong(5,funcionario.getEndereco_id());
-			ps.setString(6, funcionario.getSenha());
-
+			ps.setString(4, funcionario.getSenha());
 
 			ps.execute();
 			ps.close();
@@ -50,7 +40,7 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 
 
 	public void alterar(Funcionario funcionario) {		
-		String sql = "UPDATE FUNCIONARIO SET EMAIL = ?, NOME = ?, TELEFONE_ID = ?, ENDERECO_ID = ?, SENHA = ? where CPF = ?";
+		String sql = "UPDATE FUNCIONARIO SET EMAIL = ?, NOME = ?, SENHA = ? where CPF = ?";
 
 		Connection conexao;
 		try {
@@ -60,10 +50,8 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 			
 			ps.setString(1, funcionario.getEmail());
 			ps.setString(2, funcionario.getNome());
-			ps.setLong(3, funcionario.getTelefone_id());
-			ps.setLong(4, funcionario.getEndereco_id());
-			ps.setString(5, funcionario.getSenha());
-			ps.setLong(6, funcionario.getCpf());
+			ps.setString(3, funcionario.getSenha());
+			ps.setLong(4, funcionario.getCpf());
 			
 			ps.execute();
 			ps.close();
@@ -96,7 +84,7 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 	}
 
 	public Funcionario pesquisar(Long cpf) {
-		String sql = "SELECT F.NOME, F.EMAIL, F.TELEFONE_ID, F.ENDERECO_ID, F.SENHA FROM FUNCIONARIO F WHERE CPF = ?";
+		String sql = "SELECT F.NOME, F.EMAIL, F.SENHA FROM FUNCIONARIO F WHERE CPF = ?";
 		
 		Funcionario funcionario = null;
 		
@@ -115,8 +103,6 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 				funcionario.setCpf(res.getLong("CPF"));
 				funcionario.setNome(res.getString("NOME"));
 				funcionario.setEmail(res.getString("EMAIL"));
-				funcionario.setTelefone_id(res.getLong("TELEFONE_ID"));
-				funcionario.setEndereco_id(res.getLong("ENDERECO_ID"));
 				funcionario.setSenha(res.getString("SENHA"));
 			 }
 			
@@ -131,7 +117,7 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 
 	public List<Funcionario> listarTodos() {
 
-		String sql = "SELECT F.CPF, F.NOME, F.EMAIL, F.TELEFONE_ID, F.ENDERECO_ID, F.SENHA FROM FUNCIONARIO F";
+		String sql = "SELECT F.CPF, F.NOME, F.EMAIL, F.SENHA FROM FUNCIONARIO F";
 		
 		List<Funcionario> listaFuncionarios = new ArrayList<Funcionario>();
 		
@@ -149,8 +135,6 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 				funcionario.setCpf(res.getLong("CPF"));
 				funcionario.setNome(res.getString("NOME"));
 				funcionario.setEmail(res.getString("EMAIL"));
-				funcionario.setTelefone_id(res.getLong("TELEFONE_ID"));
-				funcionario.setEndereco_id(res.getLong("ENDERECO_ID"));
 				funcionario.setSenha(res.getString("SENHA"));
 				
 				listaFuncionarios.add(funcionario);

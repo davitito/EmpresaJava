@@ -2,11 +2,8 @@ package entidade;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -15,8 +12,6 @@ public class Endereco {
 
 	@Id
 	@Column(name="ID", nullable = false)
-	@GeneratedValue(generator = "S_ENDERECO")
-	@SequenceGenerator(name = "S_ENDERECO", sequenceName = "S_ENDERECO", allocationSize = 1)
 	private Long id;
 	
 	@Column(name="RUA", nullable = false)
@@ -38,8 +33,8 @@ public class Endereco {
 	private String cep;
 	
 	@OneToOne
-	@JoinColumn (name="ID", referencedColumnName = "ENDERECO_ID", nullable = false)
-	private Funcionario funcionario;
+	@Column(name="CPF_END", nullable = false)
+	private Long cpf_end;
 	
 	
 	public Long getId() {
@@ -98,13 +93,14 @@ public class Endereco {
 		this.cep = cep;
 	}
 
-	public Funcionario getFuncionario() {
-		return funcionario;
+	public Long getCpf_end() {
+		return cpf_end;
 	}
 
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
+	public void setCpf_end(Long cpf_end) {
+		this.cpf_end = cpf_end;
 	}
+
 		
 	
 }

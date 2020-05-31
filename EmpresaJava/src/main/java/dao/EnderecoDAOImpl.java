@@ -31,7 +31,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 	}
 	public void inserir(Endereco endereco) {
 
-		String sql = "INSERT INTO ENDERECO (ID, RUA, NUMERO_END, BAIRRO, CIDADE, ESTADO, CEP) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO ENDERECO (ID, RUA, NUMERO_END, BAIRRO, CIDADE, ESTADO, CEP, CPF_END) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 		Connection conexao;
 		try {
@@ -48,6 +48,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 			ps.setString(5, endereco.getCidade());
 			ps.setString(6, endereco.getEstado());
 			ps.setString(7, endereco.getCep());
+			ps.setLong(8, endereco.getCpf_end());
 
 			ps.execute();
 			ps.close();
@@ -109,7 +110,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
 	public Endereco pesquisar(Long id) {
 
-		String sql = "SELECT E.RUA, E.NUMERO_END, E.BAIRRO, E.CIDADE, E.ESTADO, E.CEP FROM TELEFONE T WHERE ID = ?";
+		String sql = "SELECT E.RUA, E.NUMERO_END, E.BAIRRO, E.CIDADE, E.ESTADO, E.CEP, E.CPF_END FROM TELEFONE T WHERE ID = ?";
 		
 		Endereco endereco = null;
 		
@@ -131,6 +132,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 				endereco.setCidade(res.getString("CIDADE"));
 				endereco.setEstado(res.getString("ESTADO"));
 				endereco.setCep(res.getString("CEP"));
+				endereco.setCpf_end(res.getLong("CPF_TEL"));
 				endereco.setId(res.getLong("ID"));			
 			 }
 			
@@ -145,7 +147,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
 	public List<Endereco> listarTodos() {
 
-		String sql = "SELECT E.ID, E.RUA, E.NUMERO_END, E.BAIRRO, E.CIDADE, E.ESTADO, E.CEP, FROM ENDERECO E";
+		String sql = "SELECT E.ID, E.RUA, E.NUMERO_END, E.BAIRRO, E.CIDADE, E.ESTADO, E.CEP, E.CPF_END FROM ENDERECO E";
 		
 		List<Endereco> listaEnderecos = new ArrayList<Endereco>();
 		
@@ -168,6 +170,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 				endereco.setCidade(res.getString("CIDADE"));
 				endereco.setEstado(res.getString("ESTADO"));
 				endereco.setCep(res.getString("CEP"));
+				endereco.setCpf_end(res.getLong("CPF_END"));
 			
 				
 				listaEnderecos.add(endereco);

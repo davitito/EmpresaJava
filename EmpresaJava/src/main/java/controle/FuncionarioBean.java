@@ -62,6 +62,9 @@ public class FuncionarioBean {
 	private Endereco endereco;
 	private EnderecoDAO enderecoDAO;
 	
+	private List<Telefone> listaTelefonesAdicionais;
+	
+	
 	public FuncionarioBean() {
 		this.listaFuncionarios = new ArrayList<Funcionario>();
 		this.funcionario = new Funcionario();
@@ -76,7 +79,8 @@ public class FuncionarioBean {
 		this.enderecoDAO = new EnderecoDAOImpl();
 		
 		this.atualizarUsuarioLogado();
-
+		
+		this.listaTelefonesAdicionais = new ArrayList<Telefone>();
 	}
 	
 	public void atualizarUsuarioLogado() {
@@ -105,15 +109,11 @@ public class FuncionarioBean {
 		if (emailValido) {
 			
 			Funcionario novo = new Funcionario();
-			
-			//List<Telefone> telefones = novo.getTelefones();
-			//telefones = this.telefoneDAO.listarTodos();
 						
 			novo.setCpf(this.txtCpf);
 			novo.setNome(this.txtNome);
 			novo.setEmail(this.txtEmail);
 			novo.setSenha(this.txtSenha);
-				
 			
 			boolean achou = false;
 			this.listaFuncionarios = this.funcionarioDAO.listarTodos();
@@ -141,16 +141,28 @@ public class FuncionarioBean {
 	}
 	public void cadastrarTelefone() {
 		Telefone novoTel = new Telefone();
-
 		novoTel.setDdd(this.txtTelDDD);
 		novoTel.setNumero_tel(this.txtTelNum);
 		novoTel.setCpf_tel(this.txtCpf);
-		
-		if (this.telefone.getId() == null) {
-			this.telefoneDAO.inserir(novoTel);
-			this.telefone = new Telefone();
-		}
+
+		listaTelefonesAdicionais.add(novoTel);
+		for (Telefone adicionaTel : listaTelefonesAdicionais) { 
+			System.out.println(adicionaTel);
+		    this.telefoneDAO.inserir(adicionaTel);
+	    }
+		this.telefone = new Telefone();
 	}
+	
+	public void adicionarTelefone() {
+		Telefone addTel = new Telefone();
+		addTel.setDdd(this.txtTelDDD);
+		addTel.setNumero_tel(this.txtTelNum);
+		addTel.setCpf_tel(this.txtCpf);
+		listaTelefonesAdicionais.add(addTel);
+		this.txtTelDDD = null;
+		this.txtTelNum = null;
+	}
+	
 	public void cadastrarEndereco() {
 		Endereco novoEnd = new Endereco();
 
@@ -165,6 +177,83 @@ public class FuncionarioBean {
 		if (this.endereco.getId() == null) {
 			this.enderecoDAO.inserir(novoEnd);
 			this.endereco = new Endereco();
+		}
+	}
+	public void pesquisarFuncionario() throws IOException {
+		boolean achou = false;
+		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
+		this.listaTelefones = this.telefoneDAO.listarTodos();
+		this.listaEnderecos = this.enderecoDAO.listarTodos();
+		
+		System.out.println("listaFuncionarios "+listaFuncionarios);
+		System.out.println("listaTelefones "+listaTelefones);
+		System.out.println("listaEnderecos "+listaEnderecos);
+		
+		
+		for (Funcionario funcionarioPesquisa : listaFuncionarios) {
+			
+			if (funcionarioPesquisa.getCpf().equals(this.txtCpf)) {
+				achou = true;
+				System.out.println("funcionarioPesquisa.getCpf() "+funcionarioPesquisa.getCpf());
+				System.out.println("funcionarioPesquisa.getEmail() "+funcionarioPesquisa.getEmail());
+				System.out.println("funcionarioPesquisa.getNome() "+funcionarioPesquisa.getNome());
+				System.out.println("funcionarioPesquisa.getSenha() "+funcionarioPesquisa.getSenha());
+				//System.out.println("funcionarioPesquisa.getTelefone().getCpf_tel() "+funcionarioPesquisa.getTelefone().getCpf_tel());
+				//System.out.println("funcionarioPesquisa.getTelefone().getDdd() "+funcionarioPesquisa.getTelefone().getDdd());
+				//System.out.println("funcionarioPesquisa.getTelefone().getNumero_tel() "+funcionarioPesquisa.getTelefone().getNumero_tel());
+			}
+		}
+		System.out.println("achou "+achou);
+		if(achou) {
+			for (Endereco enderecoPesquisa : listaEnderecos) {
+				//if (enderecoPesquisa.getCpf_end().equals(this.txtCpf)) {
+					System.out.println("funcionarioPesquisa.getEndereco().getCpf_end() "+enderecoPesquisa.getCpf_end());
+					System.out.println("funcionarioPesquisa.getEndereco().getRua() "+enderecoPesquisa.getRua());
+					System.out.println("funcionarioPesquisa.getEndereco().getNumero_end() "+enderecoPesquisa.getNumero_end());
+					System.out.println("funcionarioPesquisa.getEndereco().getBairro() "+enderecoPesquisa.getBairro());
+					System.out.println("funcionarioPesquisa.getEndereco().getCidade() "+enderecoPesquisa.getCidade());
+					System.out.println("funcionarioPesquisa.getEndereco().getEstado() "+enderecoPesquisa.getEstado());
+					System.out.println("funcionarioPesquisa.getEndereco().getCep() "+enderecoPesquisa.getCep());
+				//}
+			}
+			//this.funcionarioDAO.pesquisar();
+			System.out.println("mostrar funcionario");
+		}else {
+			FacesContext.getCurrentInstance()
+			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não cadastrado!!!"));
+		}
+	}
+	
+	
+	
+	public void alterarFuncionario() throws IOException {
+		boolean achou = false;
+		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
+		for (Funcionario funcionarioPesquisa : listaFuncionarios) {
+			if (funcionarioPesquisa.getCpf().equals(this.funcionario.getCpf())) {
+				achou = true;
+			}
+		}
+		if(achou) {
+			System.out.println("alterar funcionario");
+		}else {
+			FacesContext.getCurrentInstance()
+			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não cadastrado!!!"));
+		}
+	}
+	public void removerFuncionario() throws IOException {
+		boolean achou = false;
+		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
+		for (Funcionario funcionarioPesquisa : listaFuncionarios) {
+			if (funcionarioPesquisa.getCpf().equals(this.funcionario.getCpf())) {
+				achou = true;
+			}
+		}
+		if(achou) {
+			System.out.println("remover funcionario");
+		}else {
+			FacesContext.getCurrentInstance()
+			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não cadastrado!!!"));
 		}
 	}
 	public Long getTxtCpf() {
@@ -327,5 +416,13 @@ public class FuncionarioBean {
 		this.endereco = endereco;
 	}
 
+	public List<Telefone> getListaTelefonesAdicionais() {
+		return listaTelefonesAdicionais;
+	}
 
+	public void setListaTelefonesAdicionais(List<Telefone> listaTelefonesAdicionais) {
+		this.listaTelefonesAdicionais = listaTelefonesAdicionais;
+	}
+
+	
 }

@@ -34,6 +34,9 @@
 			<p:inputText value="#{FuncionarioBean.txtTelDDD}" />
 			<p:outputLabel value="Número:" />
 			<p:inputText value="#{FuncionarioBean.txtTelNum}" />
+			<p:outputLabel value="Adicionar Telefone:" />
+			<p:commandButton value="Adicionar" update="@form" actionListener="#{FuncionarioBean.adicionarTelefone}" />
+			
 			
 			<p:outputLabel value="ENDEREÇO: " />
 			<p:outputLabel value=" " />
@@ -50,7 +53,10 @@
 			<p:outputLabel value="CEP:" />
 			<p:inputText value="#{FuncionarioBean.txtEndCEP}" />
 
-			<p:commandButton value="Salvar" update="@form" actionListener="#{FuncionarioBean.criarFuncionario}" />
+			<p:commandButton value="Inserir" update="@form" actionListener="#{FuncionarioBean.criarFuncionario}" />
+			<p:commandButton value="Pesquisar" update="@form" actionListener="#{FuncionarioBean.pesquisarFuncionario}" />
+			<p:commandButton value="Alterar" update="@form" actionListener="#{FuncionarioBean.alterarFuncionario}" />
+			<p:commandButton value="Remover" update="@form" actionListener="#{FuncionarioBean.removerFuncionario}" />
 		</p:panelGrid>
 
 	</ui:define>

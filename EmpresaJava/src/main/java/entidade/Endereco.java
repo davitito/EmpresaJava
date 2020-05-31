@@ -1,39 +1,15 @@
 package entidade;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="ENDERECO")
 public class Endereco {
 
-	@Id
-	@Column(name="ID", nullable = false)
 	private Long id;
-	
-	@Column(name="RUA", nullable = false)
 	private String rua;
-	
-	@Column(name="NUMERO_END", nullable = false)
 	private String numero_end;
-	
-	@Column(name="BAIRRO", nullable = false)
 	private String bairro;
-	
-	@Column(name="CIDADE", nullable = false)
 	private String cidade;
-	
-	@Column(name="ESTADO", nullable = false)
 	private String estado;
-	
-	@Column(name="CEP", nullable = false)
 	private String cep;
-	
-	@OneToOne
-	@Column(name="CPF_END", nullable = false)
 	private Long cpf_end;
 	
 	

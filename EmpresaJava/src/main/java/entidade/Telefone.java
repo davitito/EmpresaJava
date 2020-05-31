@@ -1,27 +1,11 @@
 package entidade;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="TELEFONE")
 public class Telefone {
 
-	@Id
-	@Column(name="ID", nullable = false)
 	private Long id;
-	
-	@Column(name="DDD", nullable = false)
 	private Long ddd;
-	
-	@Column(name="NUMERO_TEL", nullable = false)
 	private Long numero_tel;
-	
-	@ManyToOne
-	@Column(name="CPF_TEL", nullable = false)
 	private Long cpf_tel;
 	
 	

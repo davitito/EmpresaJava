@@ -40,7 +40,7 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 
 
 	public void alterar(Funcionario funcionario) {		
-		String sql = "UPDATE FUNCIONARIO SET EMAIL = ?, NOME = ?, SENHA = ? where CPF = ?";
+		String sql = "UPDATE FUNCIONARIO SET EMAIL = ?, NOME = ? where CPF = ?";
 
 		Connection conexao;
 		try {
@@ -50,8 +50,7 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 			
 			ps.setString(1, funcionario.getEmail());
 			ps.setString(2, funcionario.getNome());
-			ps.setString(3, funcionario.getSenha());
-			ps.setLong(4, funcionario.getCpf());
+			ps.setLong(3, funcionario.getCpf());
 			
 			ps.execute();
 			ps.close();
@@ -100,7 +99,6 @@ public class FuncionarioDAOImpl implements FuncionarioDAO {
 
 			while (res.next()) {
 				funcionario = new Funcionario();
-				funcionario.setCpf(res.getLong("CPF"));
 				funcionario.setNome(res.getString("NOME"));
 				funcionario.setEmail(res.getString("EMAIL"));
 				funcionario.setSenha(res.getString("SENHA"));

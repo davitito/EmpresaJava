@@ -62,7 +62,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
 	public void alterar(Endereco endereco) {
 		
-		String sql = "UPDATE ENDERECO SET RUA = ? , NUMERO_END = ? , BAIRRO = ? , CIDADE = ? , ESTADO = ? , CEP = ? ) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "UPDATE ENDERECO SET RUA = ? , NUMERO_END = ? , BAIRRO = ? , CIDADE = ? , ESTADO = ? , CEP = ?  WHERE CPF_END = ?";
 
 		Connection conexao;
 		try {
@@ -76,6 +76,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 			ps.setString(4, endereco.getCidade());
 			ps.setString(5, endereco.getEstado());
 			ps.setString(6, endereco.getCep());
+			ps.setLong(7, endereco.getCpf_end());
 			
 
 			ps.execute();
@@ -89,7 +90,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
 	public void remover(Endereco endereco) {
 
-		String sql = "DELETE FROM ENDERECO WHERE ID = ?";
+		String sql = "DELETE FROM ENDERECO WHERE CPF_END = ?";
 
 		Connection conexao;
 		try {
@@ -97,7 +98,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 			
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
-			ps.setLong(1, endereco.getId());
+			ps.setLong(1, endereco.getCpf_end());
 
 			ps.execute();
 			ps.close();
@@ -108,9 +109,9 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
 	}
 
-	public Endereco pesquisar(Long id) {
+	public Endereco pesquisar(Long cpf_end) {
 
-		String sql = "SELECT E.RUA, E.NUMERO_END, E.BAIRRO, E.CIDADE, E.ESTADO, E.CEP, E.CPF_END FROM TELEFONE T WHERE ID = ?";
+		String sql = "SELECT E.RUA, E.NUMERO_END, E.BAIRRO, E.CIDADE, E.ESTADO, E.CEP FROM ENDERECO E WHERE CPF_END = ?";
 		
 		Endereco endereco = null;
 		
@@ -120,7 +121,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 			
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
-			ps.setLong(1, id);
+			ps.setLong(1, cpf_end);
 
 			ResultSet res = ps.executeQuery();
 
@@ -132,8 +133,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 				endereco.setCidade(res.getString("CIDADE"));
 				endereco.setEstado(res.getString("ESTADO"));
 				endereco.setCep(res.getString("CEP"));
-				endereco.setCpf_end(res.getLong("CPF_TEL"));
-				endereco.setId(res.getLong("ID"));			
+	
 			 }
 			
 			ps.close();

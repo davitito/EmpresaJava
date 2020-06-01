@@ -59,7 +59,7 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 
 	public void alterar(Telefone telefone) {
 		
-		String sql = "UPDATE TELEFONE SET DDD = ? , NUMERO_TEL = ? WHERE ID = ?";
+		String sql = "UPDATE TELEFONE SET DDD = ? , NUMERO_TEL = ? WHERE CPF_TEL = ?";
 
 		Connection conexao;
 		try {
@@ -69,7 +69,7 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 			
 			ps.setLong(1, telefone.getDdd());
 			ps.setLong(2, telefone.getNumero_tel());
-			ps.setLong(3, telefone.getId());
+			ps.setLong(3, telefone.getCpf_tel());
 
 			ps.execute();
 			ps.close();
@@ -82,7 +82,7 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 
 	public void remover(Telefone telefone) {
 
-		String sql = "DELETE FROM TELEFONE WHERE ID = ?";
+		String sql = "DELETE FROM TELEFONE WHERE CPF_TEL = ?";
 
 		Connection conexao;
 		try {
@@ -90,7 +90,7 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 			
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
-			ps.setLong(1, telefone.getId());
+			ps.setLong(1, telefone.getCpf_tel());
 
 			ps.execute();
 			ps.close();
@@ -101,9 +101,9 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 
 	}
 
-	public Telefone pesquisar(Long id) {
+	public Telefone pesquisar(Long cpf_tel) {
 
-		String sql = "SELECT T.DDD, T.NUMERO_TEL, T.CPF_TEL FROM TELEFONE T WHERE ID = ?";
+		String sql = "SELECT T.DDD, T.NUMERO_TEL FROM TELEFONE T WHERE CPF_TEL = ?";
 		
 		Telefone telefone = null;
 		
@@ -113,16 +113,14 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 			
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
-			ps.setLong(1, id);
+			ps.setLong(1, cpf_tel);
 
 			ResultSet res = ps.executeQuery();
 
 			while (res.next()) {
 				telefone = new Telefone();
 				telefone.setDdd(res.getLong("DDD"));
-				telefone.setNumero_tel(res.getLong("NUMERO_TEL"));
-				telefone.setCpf_tel(res.getLong("CPF_TEL"));
-				telefone.setId(res.getLong("ID"));					
+				telefone.setNumero_tel(res.getLong("NUMERO_TEL"));				
 			 }
 			
 			ps.close();
@@ -154,7 +152,7 @@ public class TelefoneDAOImpl implements TelefoneDAO {
 				telefone.setId(res.getLong("ID"));
 				telefone.setDdd(res.getLong("DDD"));
 				telefone.setNumero_tel(res.getLong("NUMERO_TEL"));
-				telefone.setCpf_tel(res.getLong("CPF_TEL"));
+
 				
 				listaTelefones.add(telefone);
 			 }

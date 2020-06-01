@@ -103,18 +103,13 @@ public class FuncionarioBean {
 	}
 	
 	public void criarFuncionario() throws IOException {
-
 		emailValido = validarEmail(this.txtEmail);
-		
 		if (emailValido) {
-			
 			Funcionario novo = new Funcionario();
-						
 			novo.setCpf(this.txtCpf);
 			novo.setNome(this.txtNome);
 			novo.setEmail(this.txtEmail);
 			novo.setSenha(this.txtSenha);
-			
 			boolean achou = false;
 			this.listaFuncionarios = this.funcionarioDAO.listarTodos();
 			for (Funcionario funcionarioPesquisa : listaFuncionarios) {
@@ -122,7 +117,6 @@ public class FuncionarioBean {
 					achou = true;
 				}
 			}
-
 			if(achou) {
 				FacesContext.getCurrentInstance()
 					.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário já cadastrado, tente outro!!!"));
@@ -131,20 +125,18 @@ public class FuncionarioBean {
 				cadastrarTelefone();
 				cadastrarEndereco();
 				this.funcionario = new Funcionario();
-				
+				FacesContext.getCurrentInstance().getExternalContext().redirect("funcionalidades.xhtml");
 			}
 		}else {
 			FacesContext.getCurrentInstance()
 			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Digite um e-mail válido!!!"));
 		}
-		
 	}
 	public void cadastrarTelefone() {
 		Telefone novoTel = new Telefone();
 		novoTel.setDdd(this.txtTelDDD);
 		novoTel.setNumero_tel(this.txtTelNum);
 		novoTel.setCpf_tel(this.txtCpf);
-
 		listaTelefonesAdicionais.add(novoTel);
 		for (Telefone adicionaTel : listaTelefonesAdicionais) { 
 			System.out.println(adicionaTel);
@@ -165,7 +157,6 @@ public class FuncionarioBean {
 	
 	public void cadastrarEndereco() {
 		Endereco novoEnd = new Endereco();
-
 		novoEnd.setRua(this.txtEndRua);
 		novoEnd.setNumero_end(this.txtEndNum);
 		novoEnd.setBairro(this.txtEndBairro);
@@ -173,89 +164,131 @@ public class FuncionarioBean {
 		novoEnd.setEstado(this.txtEndEstado);
 		novoEnd.setCep(this.txtEndCEP);
 		novoEnd.setCpf_end(this.txtCpf);
-		
 		if (this.endereco.getId() == null) {
 			this.enderecoDAO.inserir(novoEnd);
 			this.endereco = new Endereco();
 		}
 	}
-	public void pesquisarFuncionario() throws IOException {
+	//PESQUISAR
+	public void mostrarDados() {
+		Funcionario func = new Funcionario();
+		Telefone tele = new Telefone();
+		Endereco ende = new Endereco();
 		boolean achou = false;
+
 		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
 		this.listaTelefones = this.telefoneDAO.listarTodos();
 		this.listaEnderecos = this.enderecoDAO.listarTodos();
 		
-		System.out.println("listaFuncionarios "+listaFuncionarios);
-		System.out.println("listaTelefones "+listaTelefones);
-		System.out.println("listaEnderecos "+listaEnderecos);
-		
-		
 		for (Funcionario funcionarioPesquisa : listaFuncionarios) {
+			if (funcionarioPesquisa.getCpf().equals(this.txtCpf)) {
+				func = funcionarioPesquisa;
+				achou = true;
+			}
+		}
+		
+		if(achou) {
 			
+			func = this.funcionarioDAO.pesquisar(this.txtCpf);
+			tele = this.telefoneDAO.pesquisar(this.txtCpf);
+			ende = this.enderecoDAO.pesquisar(this.txtCpf);
+	
+			this.txtEmail = func.getEmail();
+			this.txtNome = func.getNome();
+			
+			this.txtTelDDD = tele.getDdd();
+			this.txtTelNum = tele.getNumero_tel();
+			
+			this.txtEndRua = ende.getRua();
+			this.txtEndNum = ende.getNumero_end();	
+			this.txtEndBairro = ende.getBairro();
+			this.txtEndCidade = ende.getCidade();
+			this.txtEndEstado = ende.getEstado();
+			this.txtEndCEP = ende.getCep();
+			
+		}else {
+			FacesContext.getCurrentInstance()
+			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não cadastrado!!!"));
+		}
+	}
+	//Volta para as páginas dos botões - funcionalidades	
+	public void voltar() throws IOException {
+		FacesContext.getCurrentInstance().getExternalContext().redirect("funcionalidades.xhtml");
+	}
+	//alterar -- o cpf já é o correto, verificado pelo botão buscar--função mostrarDados.
+	public void alterarFuncionario() throws IOException {
+
+		Funcionario fun = new Funcionario();
+		Telefone tel = new Telefone();
+		Endereco end = new Endereco();
+		
+		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
+		this.listaTelefones = this.telefoneDAO.listarTodos();
+		this.listaEnderecos = this.enderecoDAO.listarTodos();
+		
+		end.setCpf_end(this.txtCpf);
+		
+		end.setRua(this.txtEndRua);
+		end.setNumero_end(this.txtEndNum);
+		end.setBairro(this.txtEndBairro);
+		end.setCidade(this.txtEndCidade);
+		end.setEstado(this.txtEndEstado);
+		end.setCep(this.txtEndCEP);
+				
+		tel.setCpf_tel(this.txtCpf);
+		
+		tel.setDdd(this.txtTelDDD);
+		tel.setNumero_tel(this.txtTelNum);
+		
+		fun.setCpf(this.txtCpf);
+		
+		fun.setEmail(this.txtEmail);
+		fun.setNome(this.txtNome);
+		
+		
+		this.enderecoDAO.alterar(end);
+		this.telefoneDAO.alterar(tel);
+		this.funcionarioDAO.alterar(fun);
+		
+		this.endereco = new Endereco();
+		this.telefone = new Telefone();
+		this.funcionario = new Funcionario();
+	}
+	
+	//remover
+	public void removerFuncionario() throws IOException {
+		Funcionario f = new Funcionario();
+		Telefone t = new Telefone();
+		Endereco e = new Endereco();
+		boolean achou = true;
+
+		e.setCpf_end(this.txtCpf);
+		f.setCpf(this.txtCpf);
+		t.setCpf_tel(this.txtCpf);
+		
+		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
+		for (Funcionario funcionarioPesquisa : listaFuncionarios) {
 			if (funcionarioPesquisa.getCpf().equals(this.txtCpf)) {
 				achou = true;
-				System.out.println("funcionarioPesquisa.getCpf() "+funcionarioPesquisa.getCpf());
-				System.out.println("funcionarioPesquisa.getEmail() "+funcionarioPesquisa.getEmail());
-				System.out.println("funcionarioPesquisa.getNome() "+funcionarioPesquisa.getNome());
-				System.out.println("funcionarioPesquisa.getSenha() "+funcionarioPesquisa.getSenha());
-				//System.out.println("funcionarioPesquisa.getTelefone().getCpf_tel() "+funcionarioPesquisa.getTelefone().getCpf_tel());
-				//System.out.println("funcionarioPesquisa.getTelefone().getDdd() "+funcionarioPesquisa.getTelefone().getDdd());
-				//System.out.println("funcionarioPesquisa.getTelefone().getNumero_tel() "+funcionarioPesquisa.getTelefone().getNumero_tel());
-			}
-		}
-		System.out.println("achou "+achou);
-		if(achou) {
-			for (Endereco enderecoPesquisa : listaEnderecos) {
-				//if (enderecoPesquisa.getCpf_end().equals(this.txtCpf)) {
-					System.out.println("funcionarioPesquisa.getEndereco().getCpf_end() "+enderecoPesquisa.getCpf_end());
-					System.out.println("funcionarioPesquisa.getEndereco().getRua() "+enderecoPesquisa.getRua());
-					System.out.println("funcionarioPesquisa.getEndereco().getNumero_end() "+enderecoPesquisa.getNumero_end());
-					System.out.println("funcionarioPesquisa.getEndereco().getBairro() "+enderecoPesquisa.getBairro());
-					System.out.println("funcionarioPesquisa.getEndereco().getCidade() "+enderecoPesquisa.getCidade());
-					System.out.println("funcionarioPesquisa.getEndereco().getEstado() "+enderecoPesquisa.getEstado());
-					System.out.println("funcionarioPesquisa.getEndereco().getCep() "+enderecoPesquisa.getCep());
-				//}
-			}
-			//this.funcionarioDAO.pesquisar();
-			System.out.println("mostrar funcionario");
-		}else {
-			FacesContext.getCurrentInstance()
-			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não cadastrado!!!"));
-		}
-	}
-	
-	
-	
-	public void alterarFuncionario() throws IOException {
-		boolean achou = false;
-		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
-		for (Funcionario funcionarioPesquisa : listaFuncionarios) {
-			if (funcionarioPesquisa.getCpf().equals(this.funcionario.getCpf())) {
-				achou = true;
 			}
 		}
 		if(achou) {
-			System.out.println("alterar funcionario");
+			this.enderecoDAO.remover(e);
+			this.endereco = new Endereco();
+			
+			this.telefoneDAO.remover(t);
+			this.telefone = new Telefone();
+			
+			this.funcionarioDAO.remover(f);
+			this.funcionario = new Funcionario();
+			FacesContext.getCurrentInstance().getExternalContext().redirect("funcionalidades.xhtml");
+			
 		}else {
 			FacesContext.getCurrentInstance()
-			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não cadastrado!!!"));
+			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não encontrado!!!"));
 		}
 	}
-	public void removerFuncionario() throws IOException {
-		boolean achou = false;
-		this.listaFuncionarios = this.funcionarioDAO.listarTodos();
-		for (Funcionario funcionarioPesquisa : listaFuncionarios) {
-			if (funcionarioPesquisa.getCpf().equals(this.funcionario.getCpf())) {
-				achou = true;
-			}
-		}
-		if(achou) {
-			System.out.println("remover funcionario");
-		}else {
-			FacesContext.getCurrentInstance()
-			.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!", "Funcionário não cadastrado!!!"));
-		}
-	}
+	
 	public Long getTxtCpf() {
 		return txtCpf;
 	}

@@ -44,7 +44,6 @@ public class LoginBean {
 	/**
 	 * Metodo responsavel por validar o usuario no login
 	 */
-	//public String entrar() {
 	public void entrar() throws IOException {
 		Usuario usuarioLogado = null;
 		this.listaUsuarios = this.usuarioDAO.listarTodos();
@@ -58,7 +57,7 @@ public class LoginBean {
 													.getExternalContext().getSession(true);
 			sessao.setAttribute("usuarioLogado", usuarioLogado);
 //			return "paginas/jogo/manterJogo.xhtml?faces-redirect=true&amp;includeViewParams=true";
-			FacesContext.getCurrentInstance().getExternalContext().redirect("funcionarios.xhtml?faces-redirect=true&amp;includeViewParams=true");			
+			FacesContext.getCurrentInstance().getExternalContext().redirect("funcionalidades.xhtml?faces-redirect=true&amp;includeViewParams=true");			
 		} else {
 //			return "index.xhtml";
 			FacesContext.getCurrentInstance()

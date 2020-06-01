@@ -6,7 +6,7 @@
 
 <ui:composition template="/index.xhtml">
 	<ui:define name="cabecalho">
-		<h2 align="center">CADASTRAR FUNCIONÁRIOS EMPRESA JAVA</h2>
+		<h2 align="center">ALTERAR DADOS - FUNCIONÁRIO EMPRESA JAVA</h2>
 	</ui:define>
 	
 	<ui:define name="conteudo">
@@ -19,22 +19,23 @@
 		<p:outputLabel value="#{FuncionarioBean.usuarioLogado.email}" />
 	
 		<p:panelGrid columns="2">
-			<p:outputLabel value="CPF: " />
+			<p:outputLabel value="Digite o CPF: " />
 			<p:inputText value="#{FuncionarioBean.txtCpf}" />
+			<p:outputLabel value="Mostrar dados:" />
+			<p:commandButton value="Buscar" update="@form" actionListener="#{FuncionarioBean.mostrarDados}" />
+			
 			<p:outputLabel value="Nome: " />
 			<p:inputText value="#{FuncionarioBean.txtNome}" />
 			<p:outputLabel value="E-mail: " />
 			<p:inputText value="#{FuncionarioBean.txtEmail}" />
-						
+		
+			
 			<p:outputLabel value="TELEFONE: " />
 			<p:outputLabel value=" " />
 			<p:outputLabel value="DDD:" />
 			<p:inputText value="#{FuncionarioBean.txtTelDDD}" />
 			<p:outputLabel value="Número:" />
 			<p:inputText value="#{FuncionarioBean.txtTelNum}" />
-			<p:outputLabel value="Adicionar Telefone:" />
-			<p:commandButton value="Adicionar" update="@form" actionListener="#{FuncionarioBean.adicionarTelefone}" />
-			
 			
 			<p:outputLabel value="ENDEREÇO: " />
 			<p:outputLabel value=" " />
@@ -50,11 +51,8 @@
 			<p:inputText value="#{FuncionarioBean.txtEndEstado}" />
 			<p:outputLabel value="CEP:" />
 			<p:inputText value="#{FuncionarioBean.txtEndCEP}" />
-			
-			<p:outputLabel value="Senha: " />
-			<p:password value="#{FuncionarioBean.txtSenha}" />
 
-			<p:commandButton value="Salvar" update="@form" actionListener="#{FuncionarioBean.criarFuncionario}" />
+			<p:commandButton value="Alterar" update="@form" actionListener="#{FuncionarioBean.alterarFuncionario}" />
 			<p:commandButton value="Voltar" update="@form" actionListener="#{FuncionarioBean.voltar}" />
 		</p:panelGrid>
 
